@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "268877976863",
+    "project_id": "doodledaron-gemini-apparel-app",
+    "storage_bucket": "doodledaron-gemini-apparel-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268877976863:android:4f21c2fb6d44c9e0778c2a",
+        "android_client_info": {
+          "package_name": "com.example.gemini_ai_apparel_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7HCwKC8EPVuYUGk0cm0uJzAgE_Qb8npQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

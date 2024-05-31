@@ -1,3 +1,6 @@
+import 'package:camera/camera.dart';
+import 'package:gemini_ai_apparel_shop/src/modules/camera/camera_screen.dart';
+import 'package:gemini_ai_apparel_shop/src/modules/camera/image_preview_screen.dart';
 import 'package:gemini_ai_apparel_shop/src/modules/navigation/navigation_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,8 +18,27 @@ final GoRouter router = GoRouter(
       path: "/navigation",
       name: "navigation",
       builder: (context, state) {
-
-        return NavigationScreen();
+        return const NavigationScreen();
+      },
+    ),
+    GoRoute(
+      path: "/camera",
+      name: "camera",
+      builder: (context, state) {
+        final cameras = state.extra as List<CameraDescription>?;
+        return CameraScreen(
+          cameras: cameras!,
+        );
+      },
+    ),
+    GoRoute(
+      path: "/imagepreview",
+      name: "imagepreview",
+      builder: (context, state) {
+        final imagePath = state.extra as String;
+        return ImagePreviewScreen(
+          imagePath: imagePath,
+        );
       },
     ),
   ],

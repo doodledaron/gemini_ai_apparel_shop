@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../model/apparel.dart';
+
 class ItemCard extends StatelessWidget {
+  final Apparel apparel;
   const ItemCard({
-    super.key,
+    super.key, required this.apparel,
   });
 
   @override
@@ -17,8 +20,8 @@ class ItemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'assets/shirt.jpg',
+          Image.network(
+            apparel.url,
             height: 180,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -52,7 +55,7 @@ class ItemCard extends StatelessWidget {
           Text(
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
-            'Neck Short Sleeve T-shirt',
+            apparel.name,
             style: GoogleFonts.lato(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -60,7 +63,7 @@ class ItemCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'RM100.99',
+            apparel.price.toString(),
             style: GoogleFonts.lato(
               fontSize: 18,
               fontWeight: FontWeight.bold,

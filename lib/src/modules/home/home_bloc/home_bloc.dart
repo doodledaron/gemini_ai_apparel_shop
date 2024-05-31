@@ -15,12 +15,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   FutureOr<void> homeInitialEvent(
-      HomeInitialEvent event, Emitter<HomeState> emit) {
+      HomeInitialEvent event, Emitter<HomeState> emit) async {
     emit(HomeLoadingState());
-    _apparelRepo.fetchApparels().then((apparels) {
+    try {
+      final apparels = await _apparelRepo.fetchApparels();
+
       emit(HomeLoadedState(apparels: apparels));
-    }).catchError((error) {
-      emit(HomeErrorState());
-    });
+    } catch (error) {
+      emit(HomeErrorState(error: error.toString()));
+    }
+  }
+
+//so that in the tab, it can get filtered apparrel
+    List<Apparel> getApparelsByType(String type) {
+      //only works when the screen''s state is loaded state
+    if (state is HomeLoadedState) {
+      final allApparels = (state as HomeLoadedState).apparels;
+      return allApparels.where((apparel) => apparel.type == type).toList();
+    }
+    return [];
   }
 }
