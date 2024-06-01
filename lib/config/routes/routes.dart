@@ -13,13 +13,20 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: "/home",
       name: "home",
-      builder: (context, state) => HomeScreen(),
+      builder: (context, state) {
+        final int tabIndex = state.extra as int? ?? 0;
+        return HomeScreen(
+          tabIndex: tabIndex,
+        );
+      
+      },
     ),
     GoRoute(
       path: "/navigation",
       name: "navigation",
       builder: (context, state) {
-        return const NavigationScreen();
+        final int tabIndex = state.extra as int? ?? 0;
+        return NavigationScreen(tabIndex: tabIndex);
       },
     ),
     GoRoute(
@@ -42,11 +49,10 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-        GoRoute(
+    GoRoute(
       path: "/suggestion",
       name: "suggestion",
       builder: (context, state) {
-        
         return const SuggestionScreen();
       },
     ),

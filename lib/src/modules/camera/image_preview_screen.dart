@@ -33,7 +33,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
       appBar: AppBar(
         title: const Text("Image Preview"),
       ),
-      body: BlocListener<CameraBloc, CameraState>(
+      body: BlocConsumer<CameraBloc, CameraState>(
         listener: (context, state) {
           if (state is CameraSubmitSuccessState) {
             context.pushNamed("suggestion");
@@ -45,100 +45,110 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
             );
           }
         },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: Image.file(
-                  File(widget.imagePath),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(labelText: "Gender"),
-                        items: ["Male", "Female"]
-                            .map((label) => DropdownMenuItem(
-                                  value: label,
-                                  child: Text(label),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            gender = value;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please enter a gender";
-                          }
-                          return null;
-                        },
-                      ),
-                      Text("Age: ${age.round()}"),
-                      Slider(
-                        value: age,
-                        min: 0,
-                        max: 100,
-                        divisions: 100,
-                        label: age.round().toString(),
-                        onChanged: (value) {
-                          setState(() {
-                            age = value;
-                          });
-                        },
-                      ),
-                      TextFormField(
-                        controller: desController,
-                        decoration:
-                            const InputDecoration(labelText: "Description"),
-                        maxLines: 3,
-                        onChanged: (value) {
-                          // handle description change
-                          desController.text = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please enter a description";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            //if the form is validated
-                            if (_formKey.currentState!.validate()) {
-                              print(gender);
-                              print(age);
-                              print(desController.text);
-                              //TODO add the gemini initialization here and send the data here
-                              BlocProvider.of<CameraBloc>(context).add(
-                                  CameraSubmitEvent(
-                                      widget.imagePath,
-                                      age.toString(),
-                                      gender!,
-                                      desController.text));
-                            }
-                          },
-                          child: Text("Submit"),
-                        ),
-                      ),
-                    ],
+        builder: (BuildContext context, CameraState state) {
+          if (state is CameraSubmitLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Image.file(
+                      File(widget.imagePath),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DropdownButtonFormField<String>(
+                            decoration:
+                                const InputDecoration(labelText: "Gender"),
+                            items: ["Male", "Female"]
+                                .map((label) => DropdownMenuItem(
+                                      value: label,
+                                      child: Text(label),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                gender = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter a gender";
+                              }
+                              return null;
+                            },
+                          ),
+                          Text("Age: ${age.round()}"),
+                          Slider(
+                            value: age,
+                            min: 0,
+                            max: 100,
+                            divisions: 100,
+                            label: age.round().toString(),
+                            onChanged: (value) {
+                              setState(() {
+                                age = value;
+                              });
+                            },
+                          ),
+                          TextFormField(
+                            controller: desController,
+                            decoration:
+                                const InputDecoration(labelText: "Description"),
+                            maxLines: 3,
+                            onChanged: (value) {
+                              // handle description change
+                              desController.text = value;
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter a description";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                //if the form is validated
+                                if (_formKey.currentState!.validate()) {
+                                  print(gender);
+                                  print(age);
+                                  print(desController.text);
+                                  //TODO add the gemini initialization here and send the data here
+                                  BlocProvider.of<CameraBloc>(context).add(
+                                    CameraSubmitEvent(
+                                        widget.imagePath,
+                                        age.toString(),
+                                        gender!,
+                                        desController.text),
+                                  );
+                                }
+                              },
+                              child: const Text("Submit"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            );
+          }
+        },
       ),
     );
   }

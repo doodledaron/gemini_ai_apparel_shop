@@ -10,12 +10,9 @@ sealed class CameraState extends Equatable {
 final class CameraInitial extends CameraState {}
 
 final class CameraInitializedState extends CameraState {
-
-
   const CameraInitializedState();
   @override
   List<Object> get props => [];
-
 }
 
 class CameraErrorState extends CameraState {
@@ -28,9 +25,14 @@ class CameraErrorState extends CameraState {
 }
 
 class CameraSubmitSuccessState extends CameraState {
-
-
   const CameraSubmitSuccessState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CameraSubmitLoadingState extends CameraState {
+  const CameraSubmitLoadingState();
 
   @override
   List<Object> get props => [];

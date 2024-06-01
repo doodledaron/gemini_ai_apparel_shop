@@ -1,24 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:gemini_ai_apparel_shop/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/item_card.dart';
 import 'active_tab.dart';
 import 'casual_tab.dart';
 import 'formal_tab.dart';
 import 'streetwear_tab.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final int tabIndex;
+  const HomeScreen({super.key, this.tabIndex = 0});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+//initialize a tab controller to animate tab programmatically
+  @override
+  void initState() {
+    super.initState();
+    _tabController =
+        TabController(vsync: this, length: 4, initialIndex: widget.tabIndex);
+  }
+  //if the old tab index is not same as the new tab index, animate to the new index
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.tabIndex != widget.tabIndex) {
+      _tabController.animateTo(widget.tabIndex);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('the current tab index in home screen is ${widget.tabIndex}');
     return DefaultTabController(
-      initialIndex: 0,
+      initialIndex: widget.tabIndex,
       length: 4,
       child: Scaffold(
         appBar: AppBar(
@@ -33,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               TabBar(
+                  controller: _tabController,
                   overlayColor: WidgetStateProperty.resolveWith<Color?>(
                       (Set<WidgetState> states) {
                     if (states.contains(WidgetState.pressed)) {
@@ -60,16 +80,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ]),
               Expanded(
-                child: TabBarView(children: [
-                  //1st tab
-                  CasualTab(),
-                  //2nd tab
-                  FormalTab(),
-                  //3rd tab
-                  ActiveTab(),
-                  //4th tab
-                  StreetwearTab(),
-                ]),
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [
+                    //1st tab
+                    CasualTab(),
+                    //2nd tab
+                    FormalTab(),
+                    //3rd tab
+                    ActiveTab(),
+                    //4th tab
+                    StreetwearTab(),
+                  ],
+                ),
               ),
             ],
           ),
@@ -78,6 +101,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
