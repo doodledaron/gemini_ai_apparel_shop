@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:gemini_ai_apparel_shop/src/modules/camera/camera_screen.dart';
 import 'package:gemini_ai_apparel_shop/src/modules/camera/image_preview_screen.dart';
 import 'package:gemini_ai_apparel_shop/src/modules/navigation/navigation_screen.dart';
+import 'package:gemini_ai_apparel_shop/src/modules/suggestion/screens/suggestion_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../src/modules/home/screens/home_screen.dart';
@@ -39,6 +40,14 @@ final GoRouter router = GoRouter(
         return ImagePreviewScreen(
           imagePath: imagePath,
         );
+      },
+    ),
+        GoRoute(
+      path: "/suggestion",
+      name: "suggestion",
+      builder: (context, state) {
+        
+        return const SuggestionScreen();
       },
     ),
   ],

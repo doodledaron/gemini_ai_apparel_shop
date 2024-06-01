@@ -2,6 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gemini_ai_apparel_shop/src/modules/camera/camera_bloc/camera_bloc.dart';
 import 'package:gemini_ai_apparel_shop/src/modules/home/home_bloc/home_bloc.dart';
 import 'package:gemini_ai_apparel_shop/src/modules/home/repositories/apparel_repo.dart';
 import 'package:gemini_ai_apparel_shop/src/modules/home/screens/home_screen.dart';
@@ -21,6 +22,7 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   final ApparelRepo apparelRepo = ApparelRepo();
   late HomeBloc homeBloc;
+  late CameraBloc cameraBloc;
   var _bottomNavIndex = 0;
   List<CameraDescription>? _cameras;
   final iconList = <IconData>[
@@ -35,51 +37,49 @@ class _NavigationScreenState extends State<NavigationScreen> {
     super.initState();
     initializeAvailableCameras();
     homeBloc = HomeBloc(apparelRepo)..add(HomeInitialEvent());
+    cameraBloc = CameraBloc();
   }
 
-  void initializeAvailableCameras()async{
-    _cameras=await availableCameras();
-  } 
+  void initializeAvailableCameras() async {
+    _cameras = await availableCameras();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => homeBloc,
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          onPressed: () {
-            context.pushNamed('camera', extra: _cameras);
-          },
-          backgroundColor: secondaryColor,
-          child: const Icon(
-            Icons.camera,
-            color: Colors.white,
-          ),
-          //params
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: _getPage(_bottomNavIndex),
-        bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-            backgroundColor: secondaryColor,
-            activeIndex: _bottomNavIndex,
-            gapLocation: GapLocation.center,
-            notchSmoothness: NotchSmoothness.softEdge,
-            leftCornerRadius: 0,
-            rightCornerRadius: 0,
-            onTap: (index) => setState(() => _bottomNavIndex = index),
-            itemCount: iconList.length,
-            tabBuilder: (int index, bool isActive) {
-              return Icon(
-                iconList[index],
-                size: 24,
-                color: isActive ? Colors.white : primaryColor,
-              );
-              //other params
-            }),
+        onPressed: () {
+          context.pushNamed('camera', extra: _cameras);
+        },
+        backgroundColor: secondaryColor,
+        child: const Icon(
+          Icons.camera,
+          color: Colors.white,
+        ),
+        //params
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: _getPage(_bottomNavIndex),
+      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+          backgroundColor: secondaryColor,
+          activeIndex: _bottomNavIndex,
+          gapLocation: GapLocation.center,
+          notchSmoothness: NotchSmoothness.softEdge,
+          leftCornerRadius: 0,
+          rightCornerRadius: 0,
+          onTap: (index) => setState(() => _bottomNavIndex = index),
+          itemCount: iconList.length,
+          tabBuilder: (int index, bool isActive) {
+            return Icon(
+              iconList[index],
+              size: 24,
+              color: isActive ? Colors.white : primaryColor,
+            );
+            //other params
+          }),
     );
   }
 

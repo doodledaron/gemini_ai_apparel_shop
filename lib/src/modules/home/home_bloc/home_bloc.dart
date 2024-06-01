@@ -19,7 +19,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoadingState());
     try {
       final apparels = await _apparelRepo.fetchApparels();
-
+      Future.delayed(const Duration(seconds: 2));
       emit(HomeLoadedState(apparels: apparels));
     } catch (error) {
       emit(HomeErrorState(error: error.toString()));
@@ -27,8 +27,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
 //so that in the tab, it can get filtered apparrel
-    List<Apparel> getApparelsByType(String type) {
-      //only works when the screen''s state is loaded state
+  List<Apparel> getApparelsByType(String type) {
+    //only works when the screen''s state is loaded state
     if (state is HomeLoadedState) {
       final allApparels = (state as HomeLoadedState).apparels;
       return allApparels.where((apparel) => apparel.type == type).toList();
